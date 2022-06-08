@@ -22,6 +22,9 @@ class OpponentModel:
         self.offers = []
 
         self.issues = {issue: Issue(values) for issue, values in domain.getIssuesValues().items()}
+        init_weight = 1 / len(self.issues)
+        for issue_name, issue_obj in self.issues.items():
+            issue_obj.set_weight(init_weight)
 
     def update(self, bid: Bid, **kwargs):
         """
@@ -34,11 +37,20 @@ class OpponentModel:
         if bid is None:
             return
 
+        if len(self.offers) > 0:
+            last_offer = self.offers[-1]
+            print(last_offer)
+            print(bid)
+            err
+
         self.offers.append(bid)
 
         # Call each issue object with corresponding received value.
         for issue_name, issue_obj in self.issues.items():
             issue_obj.update(bid.getValue(issue_name), **kwargs)
+
+        for issue_name, issue_obj in self.issues.items():
+            print(issue_name, issue_obj.weight)
 
     def get_utility(self, bid: Bid) -> float:
         """
@@ -67,6 +79,9 @@ class Issue:
     def __init__(self, values: DiscreteValueSet, **kwargs):
         # Initial value weights are zero
         self.value_weights = {value: 0.0 for value in values}
+
+    def set_weight(self, weight):
+        self.weight = weight
 
     def update(self, value: Value, **kwargs):
         """
