@@ -32,9 +32,9 @@ from agents.group4.learning_model import LearningModel
 
 class Group4(DefaultParty):
     """
-        Template Agent
+        Group4 Agent
     """
-    NAME: str = "Template Agent"
+    NAME: str = "Group4 Agent"
 
     def __init__(self):
         super(Group4, self).__init__()

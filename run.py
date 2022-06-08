@@ -26,8 +26,8 @@ settings = {
             "parameters": {"storage_dir": "agent_storage/HybridAgent"},
         },
         {
-            "class": "agents.template_agent.template_agent.TemplateAgent",
-            "parameters": {"storage_dir": "agent_storage/TemplateAgent"},
+            "class": "agents.group4.Group4.Group4",
+            "parameters": {"storage_dir": "agent_storage/Group4Agent"},
         },
     ],
     "profiles": ["domains/domain00/profileA.json", "domains/domain00/profileB.json"],
