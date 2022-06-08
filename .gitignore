@@ -1,2 +1,9 @@
 
 *.pyc
+
+*.log
+
+agent_storage/*
+results/*
+
+.idea/*
