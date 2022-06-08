@@ -69,7 +69,7 @@ class OpponentModel:
             issue_obj.update_value_weights(**kwargs)
 
         # for issue_name, issue_obj in self.issues.items():
-        #     print(issue_name, issue_obj.weight)
+        #     print(issue_name, issue_obj)
 
     def get_utility(self, bid: Bid) -> float:
         """
@@ -140,3 +140,6 @@ class Issue:
             return 0.0
 
         return self.weight * self.value_weights[value]
+
+    def __repr__(self):
+        return f"weight: {self.weight}\nvalue_weights: {self.value_weights}"
