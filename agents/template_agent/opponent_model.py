@@ -26,6 +26,15 @@ class OpponentModel:
         for issue_name, issue_obj in self.issues.items():
             issue_obj.set_weight(init_weight)
 
+        self.n = 0.1
+
+    def normalize_issue_weights(self, total_weight):
+        if total_weight - 1 > 0.001:
+            difference_per_issue = (total_weight - 1) / len(self.issues)
+            for issue_name, issue_obj in self.issues.items():
+                issue_obj.set_weight(issue_obj.get_weight() - difference_per_issue)
+
+
     def update(self, bid: Bid, **kwargs):
         """
             This method will be called when a bid received.
@@ -39,9 +48,16 @@ class OpponentModel:
 
         if len(self.offers) > 0:
             last_offer = self.offers[-1]
-            print(last_offer)
-            print(bid)
-            err
+
+            total_weight = 0.0
+            for issue_name, issue_obj in self.issues.items():
+                weight = issue_obj.get_weight()
+                if bid.getValue(issue_name) == last_offer.getValue(issue_name):
+                    weight = issue_obj.get_weight() + self.n
+                    issue_obj.set_weight(weight)
+                total_weight += weight
+
+            self.normalize_issue_weights(total_weight)
 
         self.offers.append(bid)
 
@@ -49,8 +65,8 @@ class OpponentModel:
         for issue_name, issue_obj in self.issues.items():
             issue_obj.update(bid.getValue(issue_name), **kwargs)
 
-        for issue_name, issue_obj in self.issues.items():
-            print(issue_name, issue_obj.weight)
+        # for issue_name, issue_obj in self.issues.items():
+        #     print(issue_name, issue_obj.weight)
 
     def get_utility(self, bid: Bid) -> float:
         """
@@ -79,6 +95,9 @@ class Issue:
     def __init__(self, values: DiscreteValueSet, **kwargs):
         # Initial value weights are zero
         self.value_weights = {value: 0.0 for value in values}
+
+    def get_weight(self):
+        return self.weight
 
     def set_weight(self, weight):
         self.weight = weight
