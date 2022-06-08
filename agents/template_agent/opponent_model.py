@@ -65,6 +65,9 @@ class OpponentModel:
         for issue_name, issue_obj in self.issues.items():
             issue_obj.update(bid.getValue(issue_name), **kwargs)
 
+        for issue_name, issue_obj in self.issues.items():
+            issue_obj.update_value_weights(**kwargs)
+
         # for issue_name, issue_obj in self.issues.items():
         #     print(issue_name, issue_obj.weight)
 
@@ -84,23 +87,34 @@ class OpponentModel:
 
         return total
 
-
 class Issue:
     """
         This class can be used to estimate issue weight and value weights.
     """
     weight: float = 0.0    # Issue Weight
     value_weights: dict    # Value Weights
+    num_occurences: dict
 
     def __init__(self, values: DiscreteValueSet, **kwargs):
         # Initial value weights are zero
         self.value_weights = {value: 0.0 for value in values}
+        self.num_occurences = dict()
 
     def get_weight(self):
         return self.weight
 
     def set_weight(self, weight):
         self.weight = weight
+
+    def update_value_weights(self, **kwargs):
+        max_occurences = -1
+
+        for value, occurences in self.num_occurences.items():
+            if occurences > max_occurences:
+                max_occurences = occurences
+
+        for value, occurences in self.num_occurences.items():
+            self.value_weights[value] = occurences / max_occurences
 
     def update(self, value: Value, **kwargs):
         """
@@ -111,7 +125,10 @@ class Issue:
         if value is None:
             return
 
-        pass
+        if not value in self.num_occurences:
+            self.num_occurences[value] = 1
+        else:
+            self.num_occurences[value] += 1
 
     def get_utility(self, value: Value) -> float:
         """
