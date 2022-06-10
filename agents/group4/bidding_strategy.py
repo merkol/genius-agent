@@ -35,7 +35,7 @@ class BiddingStrategy:
         time = get_time(self.progress)
         opponent_model = kwargs["opponent_model"]
 
-        if time <= 0.3:
+        if time < 0.3:
             # Target utility decreases linearly.
             target_utility = (-2/3) * time + 0.9
             # target_utility = 1. - time
@@ -43,7 +43,7 @@ class BiddingStrategy:
             bid = get_bid_greater_than(self.profile, target_utility, opponent_model, self.my_offers)
             # print(time, target_utility, bid, get_utility(self.profile, bid))
 
-        elif 0.3 < time <= 0.6:
+        elif 0.3 <= time < 0.6:
             target_utility = 0.7
             opponent_model = kwargs["opponent_model"]
             bid = get_bid_greater_than(self.profile, target_utility, opponent_model, self.my_offers)

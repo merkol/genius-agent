@@ -31,4 +31,7 @@ class AcceptanceStrategy:
 
         # AC_Next
 
+        if received_utility > 0.9:
+            return True
+
         return generated_utility <= received_utility
