@@ -55,6 +55,39 @@ class BiddingStrategy:
             bid = get_bid_greater_than(self.profile, target_utility, opponent_model, self.my_offers)
             # print(time, target_utility, bid, get_utility(self.profile, bid))
 
+        bid_util = get_utility(self.profile, bid)
+
+        if len(self.received_offers) > 7:
+            if time < 0.7 and random.random() < 0.5:
+                mean_received_utility = 0
+                for received_bid in self.received_offers[-3:]:
+                    received_utility = get_utility(self.profile, received_bid)
+                    mean_received_utility += received_utility
+
+                mean_received_utility /= 3
+                behavior_dependent_util = 1 - mean_received_utility
+                behavior_bid = get_bid_greater_than(self.profile, behavior_dependent_util, opponent_model, self.my_offers)
+                if behavior_dependent_util > bid_util:
+                    bid = behavior_bid
+
+            elif time >= 0.7:
+                if random.random() < (2/3):
+                    mean_received_utility = 0
+                    for received_bid in self.received_offers[-3:]:
+                        received_utility = get_utility(self.profile, received_bid)
+                        mean_received_utility += received_utility
+
+                    mean_received_utility /= 3
+                    behavior_dependent_util = 1 - mean_received_utility
+                    behavior_bid = get_bid_greater_than(self.profile, behavior_dependent_util, opponent_model,
+                                                        self.my_offers)
+                    if behavior_dependent_util > bid_util:
+                        bid = behavior_bid
+                else:
+                    target_utility = 0.7
+                    opponent_model = kwargs["opponent_model"]
+                    bid = get_bid_greater_than(self.profile, target_utility, opponent_model, self.my_offers)
+
         if not bid in self.my_offers:
             self.my_offers[bid] = 1
         else:

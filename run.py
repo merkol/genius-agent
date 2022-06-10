@@ -24,6 +24,15 @@ settings = {
         {
             "class": "agents.hybrid.hybrid_agent.HybridAgent",
             "parameters": {"storage_dir": "agent_storage/HybridAgent"},
+
+            # "class": "agents.time_dependent_agent.time_dependent_agent.TimeDependentAgent",
+            # "parameters": {"storage_dir": "agent_storage/TimeDependentAgent"},
+
+            # "class": "agents.boulware_agent.boulware_agent.BoulwareAgent",
+            # "parameters": {"storage_dir": "agent_storage/BoulwareAgent"},
+
+            # "class": "agents.linear_agent.linear_agent.LinearAgent",
+            # "parameters": {"storage_dir": "agent_storage/LinearAgent"},
         },
         {
             "class": "agents.group4.Group4.Group4",
