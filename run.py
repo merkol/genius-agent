@@ -39,7 +39,7 @@ settings = {
             "parameters": {"storage_dir": "agent_storage/Group4Agent"},
         },
     ],
-    "profiles": ["domains/domain00/profileA.json", "domains/domain00/profileB.json"],
+    "profiles": ["domains/domain01/profileA.json", "domains/domain01/profileB.json"],
     "deadline_time_ms": 10000,
 }
 

@@ -84,7 +84,7 @@ class BiddingStrategy:
                     if behavior_dependent_util > bid_util:
                         bid = behavior_bid
                 else:
-                    target_utility = 0.7
+                    target_utility = 0.625
                     opponent_model = kwargs["opponent_model"]
                     bid = get_bid_greater_than(self.profile, target_utility, opponent_model, self.my_offers)
 
