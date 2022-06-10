@@ -37,22 +37,23 @@ class BiddingStrategy:
 
         if time <= 0.3:
             # Target utility decreases linearly.
-            target_utility = 1. - time
+            target_utility = (-2/3) * time + 0.9
+            # target_utility = 1. - time
             # Get the closest bid to Target Utility
             bid = get_bid_greater_than(self.profile, target_utility, opponent_model, self.my_offers)
-            print(time, target_utility, bid, get_utility(self.profile, bid))
+            # print(time, target_utility, bid, get_utility(self.profile, bid))
 
-        elif 0.3 < time <= 0.5:
+        elif 0.3 < time <= 0.6:
             target_utility = 0.7
             opponent_model = kwargs["opponent_model"]
             bid = get_bid_greater_than(self.profile, target_utility, opponent_model, self.my_offers)
-            print(time, target_utility, bid, get_utility(self.profile, bid))
+            # print(time, target_utility, bid, get_utility(self.profile, bid))
 
         else:
-            target_utility = -0.6 * time + 1.1
+            target_utility = -0.75 * time + 1.15
             opponent_model = kwargs["opponent_model"]
             bid = get_bid_greater_than(self.profile, target_utility, opponent_model, self.my_offers)
-            print(time, target_utility, bid, get_utility(self.profile, bid))
+            # print(time, target_utility, bid, get_utility(self.profile, bid))
 
         if not bid in self.my_offers:
             self.my_offers[bid] = 1

@@ -46,6 +46,7 @@ def get_bid_greater_than(profile: LinearAdditiveUtilitySpace, utility: float, op
     # From the candidate bids chose the one that is preferred by the opponent; however, we will not repeat the same offer
     # more than 5 times
     max_op_util = -1000
+    selected_bid = None
     for bid in candidate_bids:
         op_util = opponent_model.get_utility(bid)
         if op_util > max_op_util:
@@ -56,6 +57,9 @@ def get_bid_greater_than(profile: LinearAdditiveUtilitySpace, utility: float, op
             else:
                 selected_bid = bid
                 max_op_util = op_util
+
+    if selected_bid is None:
+        selected_bid = random.choice(candidate_bids)
 
     return selected_bid
 
