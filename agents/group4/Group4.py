@@ -217,7 +217,7 @@ class Group4(DefaultParty):
         @return: None
         """
         # Generated bid by bidding strategy if the agent will not accept.
-        bid = self.bidding_strategy.generate()
+        bid = self.bidding_strategy.generate(self.last_generated_bid, opponent_model=self.opponent_model)
         self.last_generated_bid = bid
 
         if bid is None:

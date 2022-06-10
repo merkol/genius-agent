@@ -1,4 +1,5 @@
 import math
+import random
 
 from geniusweb.bidspace.AllBidsList import AllBidsList
 from geniusweb.issuevalue.Bid import Bid
@@ -7,6 +8,8 @@ from geniusweb.profile.utilityspace.LinearAdditiveUtilitySpace import (
 )
 from geniusweb.progress.ProgressTime import ProgressTime
 from time import time
+
+from agents.group4.opponent_model import OpponentModel
 
 """
     Some useful functions
@@ -21,6 +24,52 @@ def get_utility(profile: LinearAdditiveUtilitySpace, bid: Bid) -> float:
     @return: Utility of bid
     """
     return float(profile.getUtility(bid))
+
+
+def get_bid_greater_than(profile: LinearAdditiveUtilitySpace, utility: float, opponent_model: OpponentModel, my_offers: dict) -> Bid:
+    """
+    Get a random bid that is greater than the utility and is prefered by the opponent
+    :param profile: Profile
+    :param utility: Utility
+    :return: A random bid with a utility greater than the given utility
+    """
+    domain = profile.getDomain()
+    all_bids = AllBidsList(domain)
+    candidate_bids = []
+    for i in range(all_bids.size()):
+        if get_utility(profile, all_bids.get(i)) > utility:
+            candidate_bids.append(all_bids.get(i))
+
+    max_op_util = -1000
+    for bid in candidate_bids:
+        op_util = opponent_model.get_utility(bid)
+        if op_util > max_op_util:
+            if bid in my_offers:
+                if my_offers[bid] < 5:
+                    selected_bid = bid
+                    max_op_util = op_util
+            else:
+                selected_bid = bid
+                max_op_util = op_util
+
+    return selected_bid
+
+
+# def get_bid_greater_than(profile: LinearAdditiveUtilitySpace, utility: float) -> Bid:
+#     """
+#     Get a random bid that is greater than the utility
+#     :param profile: Profile
+#     :param utility: Utility
+#     :return: A random bid with a utility greater than the given utility
+#     """
+#     domain = profile.getDomain()
+#     all_bids = AllBidsList(domain)
+#     candidate_bids = []
+#     for i in range(all_bids.size()):
+#         if get_utility(profile, all_bids.get(i)) > utility:
+#             candidate_bids.append(all_bids.get(i))
+#
+#     return random.choice(candidate_bids)
 
 
 def get_bid_at(profile: LinearAdditiveUtilitySpace, utility: float) -> Bid:
