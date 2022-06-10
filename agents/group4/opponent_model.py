@@ -29,6 +29,12 @@ class OpponentModel:
         self.n = 0.1
 
     def normalize_issue_weights(self, total_weight):
+        """
+        If the total weights of the issues in this domain becomes larger than 1, we subtract the mean of the difference
+        from each issue's weight. So, the new weights will sum up to 1.
+        :param total_weight:
+        :return:
+        """
         if total_weight - 1 > 0.001:
             difference_per_issue = (total_weight - 1) / len(self.issues)
             for issue_name, issue_obj in self.issues.items():
@@ -67,6 +73,8 @@ class OpponentModel:
 
         for issue_name, issue_obj in self.issues.items():
             issue_obj.update_value_weights(**kwargs)
+            # print("value_weights", issue_obj.value_weights)
+            # print("num_occurences", issue_obj.num_occurences)
 
         # for issue_name, issue_obj in self.issues.items():
         #     print(issue_name, issue_obj)
@@ -99,22 +107,22 @@ class Issue:
         # Initial value weights are zero
         self.value_weights = {value: 0.0 for value in values}
         self.num_occurences = dict()
+        self.max_occurences = -1
 
     def get_weight(self):
         return self.weight
 
     def set_weight(self, weight):
+        """
+        Setter of the issue object's weight.
+        :param weight:
+        :return:
+        """
         self.weight = weight
 
     def update_value_weights(self, **kwargs):
-        max_occurences = -1
-
         for value, occurences in self.num_occurences.items():
-            if occurences > max_occurences:
-                max_occurences = occurences
-
-        for value, occurences in self.num_occurences.items():
-            self.value_weights[value] = occurences / max_occurences
+            self.value_weights[value] = occurences / self.max_occurences
 
     def update(self, value: Value, **kwargs):
         """
@@ -129,6 +137,9 @@ class Issue:
             self.num_occurences[value] = 1
         else:
             self.num_occurences[value] += 1
+
+        if self.max_occurences < self.num_occurences[value]:
+            self.max_occurences = self.num_occurences[value]
 
     def get_utility(self, value: Value) -> float:
         """
