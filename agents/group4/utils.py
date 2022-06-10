@@ -28,18 +28,23 @@ def get_utility(profile: LinearAdditiveUtilitySpace, bid: Bid) -> float:
 
 def get_bid_greater_than(profile: LinearAdditiveUtilitySpace, utility: float, opponent_model: OpponentModel, my_offers: dict) -> Bid:
     """
-    Get a random bid that is greater than the utility and is prefered by the opponent
+    Get a bid that is greater than the utility and is prefered by the opponent. The bid have offered less than a
+    certain amount of times in the offering history.
     :param profile: Profile
     :param utility: Utility
-    :return: A random bid with a utility greater than the given utility
+    :return: A bid with a utility greater than the given utility
     """
     domain = profile.getDomain()
     all_bids = AllBidsList(domain)
     candidate_bids = []
+
+    # Gather bids with utility greater than the desired utility
     for i in range(all_bids.size()):
         if get_utility(profile, all_bids.get(i)) > utility:
             candidate_bids.append(all_bids.get(i))
 
+    # From the candidate bids chose the one that is preferred by the opponent; however, we will not repeat the same offer
+    # more than 5 times
     max_op_util = -1000
     for bid in candidate_bids:
         op_util = opponent_model.get_utility(bid)
@@ -53,23 +58,6 @@ def get_bid_greater_than(profile: LinearAdditiveUtilitySpace, utility: float, op
                 max_op_util = op_util
 
     return selected_bid
-
-
-# def get_bid_greater_than(profile: LinearAdditiveUtilitySpace, utility: float) -> Bid:
-#     """
-#     Get a random bid that is greater than the utility
-#     :param profile: Profile
-#     :param utility: Utility
-#     :return: A random bid with a utility greater than the given utility
-#     """
-#     domain = profile.getDomain()
-#     all_bids = AllBidsList(domain)
-#     candidate_bids = []
-#     for i in range(all_bids.size()):
-#         if get_utility(profile, all_bids.get(i)) > utility:
-#             candidate_bids.append(all_bids.get(i))
-#
-#     return random.choice(candidate_bids)
 
 
 def get_bid_at(profile: LinearAdditiveUtilitySpace, utility: float) -> Bid:
